@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Savannah
 {
@@ -49,10 +51,28 @@ namespace Savannah
         /// <param name="input"> user inputs L or A </param>
         private Animal CreateAnimal(string input)
         {
-            animal.PositionX = random.Next(0, 100);
-            animal.PositionY = random.Next(6, 30);
+            while(animalList.Animals.Count < 9)
+            {
+                int X = random.Next(0, 4);
+                int Y = random.Next(4, 6);
+                int[] randomPosition = new int[2];
+                randomPosition[0] = X;
+                randomPosition[1] = Y;
+                //if(animalList.Animals.Contains(a => a.Position == randomPosition))
+                //if(animalList.Animals.Where(a => a.Position[0] == X && a.Position[1] == Y).Any())
+                //{
+
+                //}
+                //{
+                //    // Continue loop.
+                //}
+
+            animal.Position = randomPosition;
+            animal.PositionX = X;
+            animal.PositionY = Y;
             animal.Health = 20;
             animal.IsMateAvailable = false;
+            animal.ID = 1;
 
             if (input == "l")
             {
@@ -67,15 +87,19 @@ namespace Savannah
                 animal.Range = 2;
                 animal.SeekPrey = false;
             }
-
+            if(animalList.Animals != null)
+            {
+                animal.ID = animalList.Animals.Count + 1;
+            }
             animalList.Animals.Add(new Animal()
             {
-                ID = animalList.Animals.Count + 1,
+                ID = animal.ID,
                 Species = animal.Species,
                 Range = animal.Range,
                 Health = animal.Health,
                 PositionX = animal.PositionX,
                 PositionY = animal.PositionY,
+                Position = animal.Position,
                 SeekPrey = animal.SeekPrey,
                 IsMateAvailable = animal.IsMateAvailable,
             });

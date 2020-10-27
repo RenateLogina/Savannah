@@ -17,6 +17,9 @@
         // Stores current health of animal.
         public int Health { get; set; }
 
+        // Stores current animal position on board.
+        public int[] Position { get; set; }
+
         // Stores current animal position X on board.
         public int PositionX { get; set; }
 
@@ -28,5 +31,10 @@
 
         // False by default. Sets to true if same species in range for 3 turns. True triggers birth.
         public bool IsMateAvailable { get; set; }
+
+        public Animal()
+        {
+            int[] Position = new int[2];
+        }
     }
 }

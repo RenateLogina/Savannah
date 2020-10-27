@@ -44,8 +44,9 @@
         {
             string animalExists = null;
             Console.SetCursorPosition(positionX, positionY);
+            Console.CursorVisible = false;
 
-            if(species == "lion")
+            if (species == "lion")
             {
                 animalExists = "lion";
                 Console.Write("\u25B2");
@@ -58,6 +59,20 @@
             }
 
             return animalExists;
+        }
+
+        public bool IsBoardOverPopulated()
+        {
+            bool population = true;
+            Console.SetCursorPosition(0, 0);
+            Console.Write("Pls,savannah is overpopulated!");
+            return population;
+        }
+
+        public void ClearErrorMessage()
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.Write("                                 ");
         }
     }
 }

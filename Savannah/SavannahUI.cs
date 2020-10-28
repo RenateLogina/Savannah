@@ -47,9 +47,9 @@
         }
 
         /// <summary>
-        /// Prints current animal location
+        /// Prints current animal location. starting from head.
         /// </summary>
-        /// <returns> Animal Character </returns>
+        /// <returns> Animal name </returns>
         public string PrintAnimal(int positionX, int positionY, string trigger, int count)
         {
             string animalExists = null;
@@ -72,11 +72,24 @@
             }
 
             // Test how many animals
-            Console.SetCursorPosition(0,0);
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("Animals in Savannah: {0}   ", count);
+            //Console.SetCursorPosition(0,0);
+            //Console.ForegroundColor = ConsoleColor.White;
+            //Console.Write("Animals in Savannah: {0}   ", count);
 
             return animalExists;
+        }
+
+        /// <summary>
+        /// Clears animal in a 4x3 square.
+        /// </summary>
+        public void ClearAnimal(int positionX, int positionY)
+        {
+            for(int indexY = 0; indexY < 3; indexY ++)
+            {
+                Console.SetCursorPosition(positionX, positionY + indexY);
+                Console.Write("    ");
+            }
+            
         }
 
         /// <summary>
@@ -129,10 +142,6 @@
 
                 Console.CursorVisible = false;
             }
-
-            // Console.ForegroundColor = ConsoleColor.Green;
-            // Console.SetCursorPosition(positionX, positionY + 3);
-            // Console.Write(life);
         }
 
         /// <summary>

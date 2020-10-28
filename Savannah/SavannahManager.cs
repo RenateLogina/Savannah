@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Timers;
 
 namespace Savannah
 {
@@ -11,6 +12,7 @@ namespace Savannah
         SavannahUI uI = new SavannahUI();
         AnimalList animalList = new AnimalList();
         Random random = new Random();
+        public Timer MyTimer;
         int count;
 
         /// <summary>
@@ -20,8 +22,9 @@ namespace Savannah
         public void StartGame()
         {
             uI.StartGameMenu();
-            while(true)
+            while (true)
             {
+                SetGameTimer();
                 var input = uI.ToggleInput().ToString().ToLower();
                 switch (input)
                 {
@@ -53,6 +56,54 @@ namespace Savannah
                 }
             }
         }
+
+        /// <summary>
+        /// Sets timer to 1 sek. Animals move each second.
+        /// </summary>
+        private void SetGameTimer()
+        {
+            
+                MyTimer = new System.Timers.Timer(1000);
+                MyTimer.Elapsed += SavannahLoop;
+                MyTimer.AutoReset = true;
+                MyTimer.Enabled = true;
+            
+        }
+
+        public void SavannahLoop(Object source, ElapsedEventArgs e)
+        {
+            bool isNotInSavannah = false;
+            if(animalList.Animals != null)
+            {
+                
+                foreach (var animal in animalList.Animals)
+                {
+                    do
+                    {
+                        // Add check for savannah borders!
+                        int randomNumberX = random.Next(-1, 2);
+                        int randomNumberY = random.Next(-1, 2);
+                        int newPositionX = animal.Position[0] + (randomNumberX);
+                        int newPositionY = animal.Position[1] + (randomNumberY);
+                        if(newPositionX < 0 || newPositionX > 96 || newPositionY < 4 || newPositionY > 27)
+                        {
+                            isNotInSavannah = true;
+                        }
+                        else
+                        {
+                            uI.ClearAnimal(animal.Position[0], animal.Position[1]);
+                            animal.Position[0] = newPositionX;
+                            animal.Position[1] = newPositionY;
+                            uI.PrintAnimal(newPositionX, newPositionY, animal.Trigger, count);
+                            isNotInSavannah = false;
+                        }
+
+                    } while (isNotInSavannah == true);
+                }
+               
+            }
+        }
+
 
         /// <summary>
         /// Adds a new animal to list based on user input.

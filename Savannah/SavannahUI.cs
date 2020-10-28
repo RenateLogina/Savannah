@@ -40,13 +40,13 @@
         /// Prints current animal location
         /// </summary>
         /// <returns> Animal Character </returns>
-        public string PrintAnimal(int positionX, int positionY, string species)
+        public string PrintAnimal(int positionX, int positionY, string trigger)
         {
             string animalExists = null;
             Console.SetCursorPosition(positionX, positionY);
             Console.CursorVisible = false;
 
-            if (species == "lion")
+            if (trigger == "l")
             {
                 animalExists = "lion";
                 Console.Write("\u25B2");

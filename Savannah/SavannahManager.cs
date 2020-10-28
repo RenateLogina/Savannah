@@ -11,7 +11,6 @@ namespace Savannah
     {
         SavannahLogic logic = new SavannahLogic();
         SavannahUI uI = new SavannahUI();
-        Animal animal = new Animal();
         AnimalList animalList = new AnimalList();
         Random random = new Random();
 
@@ -59,6 +58,7 @@ namespace Savannah
         /// <param name="input"> user inputs L or A </param>
         private Animal CreateAnimal(string input)
         {
+            Lion lion = new Lion();
             while (animalList.Animals.Count < 221)
             {
                 int X = random.Next(0, 100);
@@ -73,43 +73,21 @@ namespace Savannah
                 }
                 else
                 {
-                    animal.Position = randomPosition;
-                    animal.PositionX = X;
-                    animal.PositionY = Y;
-                    animal.Health = 20;
-                    animal.IsMateAvailable = false;
-                    animal.ID = 1;
                     if (input == "l")
                     {
-                        animal.Species = "lion";
-                        animal.Range = 3;
-                        animal.SeekPrey = true;
-
+                        lion = new Lion();
                     }
                     else
                     {
-                        animal.Species = "antelope";
-                        animal.Range = 2;
-                        animal.SeekPrey = false;
+                        animal = new Lion();
                     }
                     if (animalList.Animals != null)
                     {
                         animal.ID = animalList.Animals.Count + 1;
                     }
-                    animalList.Animals.Add(new Animal()
-                    {
-                        ID = animal.ID,
-                        Species = animal.Species,
-                        Range = animal.Range,
-                        Health = animal.Health,
-                        PositionX = animal.PositionX,
-                        PositionY = animal.PositionY,
-                        Position = animal.Position,
-                        SeekPrey = animal.SeekPrey,
-                        IsMateAvailable = animal.IsMateAvailable,
-                    });
+                    animalList.Animals.Add(animal);
 
-                    uI.PrintAnimal(animal.PositionX, animal.PositionY, animal.Species);
+                    uI.PrintAnimal(animal.Position[0], animal.Position[1], animal.Trigger);
                     break;
                 }
             }            

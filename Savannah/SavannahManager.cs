@@ -58,36 +58,69 @@ namespace Savannah
         /// <param name="input"> user inputs L or A </param>
         private Animal CreateAnimal(string input)
         {
-            Lion lion = new Lion();
+            //Lion lion = new Lion();
+            //Antelope antelope = new Antelope();
+            Animal animal = null;
+            ////Animal animal = new Animal();
+
             while (animalList.Animals.Count < 221)
             {
-                int X = random.Next(0, 100);
-                int Y = random.Next(4, 30);
-                int[] randomPosition = new int[2];
-                randomPosition[0] = X;
-                randomPosition[1] = Y;
+                int xPosition = random.Next(0, 100);
+                int yPosition = random.Next(4, 30);
+                int[] randomPosition = new int[] { xPosition, yPosition };
 
-                if (animalList.Animals.Where(a => a.Position[0] == X && a.Position[1] == Y).Any())
+                if (animalList.Animals.Where(a => a.Position[0] == xPosition && a.Position[1] == yPosition).Any())
                 {
                     // Continue.
                 }
                 else
                 {
+                    
                     if (input == "l")
                     {
-                        lion = new Lion();
+                        Lion lion = new Lion();
+                        lion.Position = new int[2] { xPosition, yPosition };
+
+                        if (animalList.Animals != null)
+                        {
+                            lion.ID = animalList.Animals.Count + 1;
+                        }
+                        else
+                        {
+                            lion.ID = 1;
+                        }
+
+                        animal = lion;
+                        animalList.Animals.Add(new Lion()
+                        {
+                            ID = animal.ID,
+                            Trigger = animal.Trigger,
+                            LionRange = animal.Range,
+                            Health = animal.Health,
+                            Position = animal.Position,
+                            IsPredator = animal.IsPredator,
+                            IsMateAvailable = animal.IsMateAvailable,
+
+                        }) ;
+                        uI.PrintAnimal(animal.Position[0], animal.Position[1], animal.Trigger);
                     }
                     else
                     {
-                        animal = new Lion();
-                    }
-                    if (animalList.Animals != null)
-                    {
-                        animal.ID = animalList.Animals.Count + 1;
-                    }
-                    animalList.Animals.Add(animal);
+                        Antelope antelope = new Antelope();
+                        if (animalList.Animals != null)
+                        {
+                            antelope.ID = animalList.Animals.Count + 1;
+                        }
+                        else
+                        {
+                            antelope.ID = 1;
+                        }
 
-                    uI.PrintAnimal(animal.Position[0], animal.Position[1], animal.Trigger);
+                        animal = antelope;
+                        animalList.Animals.Add(new Antelope());
+                        uI.PrintAnimal(antelope.Position[0], antelope.Position[1], antelope.Trigger);
+                    }                                     
+
                     break;
                 }
             }            

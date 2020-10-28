@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Savannah
 {
@@ -9,10 +8,10 @@ namespace Savannah
     /// </summary>
     public class SavannahManager
     {
-        SavannahLogic logic = new SavannahLogic();
         SavannahUI uI = new SavannahUI();
         AnimalList animalList = new AnimalList();
         Random random = new Random();
+        int count;
 
         /// <summary>
         /// Starts game by showing welcome message and instructions.
@@ -28,9 +27,9 @@ namespace Savannah
                 {
                     case "l":
                     case "a":
-                        if (animalList.Animals.Count == 220)
+                        if (animalList.Animals.Count == 120)
                         {
-                            uI.IsBoardOverPopulated();
+                            uI.BoardOverPopulated();
                         }
                         else
                         {
@@ -38,6 +37,10 @@ namespace Savannah
                             CreateAnimal(input);
                         }
 
+                        break;
+
+                    case "u":
+                        uI.PrintTest();
                         break;
 
                     case "q":
@@ -63,23 +66,31 @@ namespace Savannah
             Animal animal = null;
             ////Animal animal = new Animal();
 
-            while (animalList.Animals.Count < 221)
+            while (animalList.Animals.Count < 120)
             {
-                int xPosition = random.Next(0, 100);
-                int yPosition = random.Next(4, 30);
+                int xPosition = random.Next(0, 96);
+                int yPosition = random.Next(4, 28);
                 int[] randomPosition = new int[] { xPosition, yPosition };
+                bool spotIsTaken = false;
 
-                if (animalList.Animals.Where(a => a.Position[0] == xPosition && a.Position[1] == yPosition).Any())
+                for(int sizeY = -2 ; sizeY < 3; sizeY ++)
                 {
-                    // Continue.
+                    for (int sizeX = -3; sizeX < 4; sizeX++)
+                    {
+                        if (animalList.Animals.Where(a => a.Position[0] + sizeX == xPosition && a.Position[1] + sizeY == yPosition).Any())
+                        {
+                            spotIsTaken = true;
+                        }
+                    }
                 }
-                else
+                if (!spotIsTaken)
                 {
+                    count++;
+
                     // Adds a Lion to AnimalList and prints it too
                     if (input == "l")
                     {
                         Lion lion = new Lion();
-
                         lion.Position = new int[2] { xPosition, yPosition };
 
                         if (animalList.Animals != null)
@@ -101,9 +112,9 @@ namespace Savannah
                             IsPredator = lion.IsPredator,
                             IsMateAvailable = lion.IsMateAvailable,
 
-                        }) ;
+                        });
 
-                        uI.PrintAnimal(lion.Position[0], lion.Position[1], lion.Trigger);
+                        uI.PrintAnimal(lion.Position[0], lion.Position[1], lion.Trigger, count);
                     }
 
                     // Adds an Antelope to AnimalList and prints it too
@@ -133,11 +144,11 @@ namespace Savannah
 
                         });
 
-                        uI.PrintAnimal(antelope.Position[0], antelope.Position[1], antelope.Trigger);
+                        uI.PrintAnimal(antelope.Position[0], antelope.Position[1], antelope.Trigger, count);
                     }
-                                        
+
                     break;
-                }
+                }              
             }            
 
             return animal;

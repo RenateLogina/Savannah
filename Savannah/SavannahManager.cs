@@ -75,10 +75,11 @@ namespace Savannah
                 }
                 else
                 {
-                    
+                    // Adds a Lion to AnimalList and prints it too
                     if (input == "l")
                     {
                         Lion lion = new Lion();
+
                         lion.Position = new int[2] { xPosition, yPosition };
 
                         if (animalList.Animals != null)
@@ -90,23 +91,27 @@ namespace Savannah
                             lion.ID = 1;
                         }
 
-                        animal = lion;
                         animalList.Animals.Add(new Lion()
                         {
-                            ID = animal.ID,
-                            Trigger = animal.Trigger,
-                            LionRange = animal.Range,
-                            Health = animal.Health,
-                            Position = animal.Position,
-                            IsPredator = animal.IsPredator,
-                            IsMateAvailable = animal.IsMateAvailable,
+                            ID = lion.ID,
+                            Trigger = lion.Trigger,
+                            LionRange = lion.Range,
+                            Health = lion.Health,
+                            Position = lion.Position,
+                            IsPredator = lion.IsPredator,
+                            IsMateAvailable = lion.IsMateAvailable,
 
                         }) ;
-                        uI.PrintAnimal(animal.Position[0], animal.Position[1], animal.Trigger);
+
+                        uI.PrintAnimal(lion.Position[0], lion.Position[1], lion.Trigger);
                     }
+
+                    // Adds an Antelope to AnimalList and prints it too
                     else
                     {
                         Antelope antelope = new Antelope();
+                        antelope.Position = new int[2] { xPosition, yPosition };
+
                         if (animalList.Animals != null)
                         {
                             antelope.ID = animalList.Animals.Count + 1;
@@ -116,11 +121,21 @@ namespace Savannah
                             antelope.ID = 1;
                         }
 
-                        animal = antelope;
-                        animalList.Animals.Add(new Antelope());
-                        uI.PrintAnimal(antelope.Position[0], antelope.Position[1], antelope.Trigger);
-                    }                                     
+                        animalList.Animals.Add(new Antelope()
+                        {
+                            ID = antelope.ID,
+                            Trigger = antelope.Trigger,
+                            Range = antelope.Range,
+                            Health = antelope.Health,
+                            Position = antelope.Position,
+                            IsPredator = antelope.IsPredator,
+                            IsMateAvailable = antelope.IsMateAvailable,
 
+                        });
+
+                        uI.PrintAnimal(antelope.Position[0], antelope.Position[1], antelope.Trigger);
+                    }
+                                        
                     break;
                 }
             }            

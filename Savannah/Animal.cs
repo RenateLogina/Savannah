@@ -25,5 +25,10 @@
 
         // False by default. Sets to true if same species in range for 3 turns. True triggers birth.
         public bool IsMateAvailable { get; set; }
+
+        public void RandomMovement()
+        {
+
+        }
     }
 }

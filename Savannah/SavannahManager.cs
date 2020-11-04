@@ -52,11 +52,6 @@ namespace Savannah
 
                         break;
 
-                    case "u":
-                        uI.PrintTest();
-
-                        break;
-
                     case "q":
                         break;
 
@@ -70,7 +65,6 @@ namespace Savannah
         {
             if (animalList.Animals != null)
             {
-                uI.ClearAnimals();
                 RandomMovement();
                 uI.PrintArray(animalList);
             }
@@ -123,7 +117,7 @@ namespace Savannah
             Animal animal = null;
             ////Animal animal = new Animal();
 
-            while (animalList.Animals.Count < 120)
+            while (animalList.Animals.Count < 121)
             {
                 int xPosition = random.Next(0, 98);
                 int yPosition = random.Next(4, 28);
@@ -144,7 +138,7 @@ namespace Savannah
                 {
                     count++;
 
-                    // Adds a Lion to AnimalList and prints it too
+                    // Adds a Lion to AnimalList
                     if (input == "l")
                     {
                         Lion lion = new Lion();
@@ -171,11 +165,9 @@ namespace Savannah
 
                         });
 
-                        //uI.PrintAnimal(lion.Position[0], lion.Position[1], lion.Trigger, count);
-                        //uI.PrintArray(animalList);
                     }
 
-                    // Adds an Antelope to AnimalList and prints it too
+                    // Adds an Antelope to AnimalList
                     else
                     {
                         Antelope antelope = new Antelope();
@@ -201,7 +193,6 @@ namespace Savannah
                             IsMateAvailable = antelope.IsMateAvailable,
 
                         });
-                        //uI.PrintAnimal(antelope.Position[0], antelope.Position[1], antelope.Trigger, count);
                     }
 
                     break;

@@ -16,6 +16,9 @@ namespace Savannah
         Random random = new Random();
         public Timer MyTimer;
         int count;
+        int boardsizeX = 30;
+        int boardsizeY = 10;
+        int ID;
 
         /// <summary>
         /// Starts game by showing welcome message and instructions.
@@ -72,57 +75,71 @@ namespace Savannah
         /// </summary>
         public void SavannahLoop(Object source, ElapsedEventArgs e)
         {
-            if (animalList.Animals != null)
+            if(animalList.Animals != null)
             {
-                Movement();
-                uI.PrintArray(animalList);
+                foreach (var animal in animalList.Animals)
+                {
+                    animal.CheckRange(animalList);
+                    if (animal.Health != 0)
+                    {
+                        if (animal.isEnemyDetected == true)
+                        {
+                            animal.Interaction(animal.EnemyX, animal.EnemyY, boardsizeX, boardsizeY);
+                        }
+                        else if (animal.isEnemyDetected == false)
+                        {
+                            RandomMovement(animal);
+                        }
+
+                        animal.Health--;
+                    }
+                    else
+                    {
+                        animalList.Animals.Remove(animal);
+                    }
+                }
+
+                uI.PrintArray(animalList, boardsizeX, boardsizeY);
             }
+            else
+            {
+                uI.PrintMenu();
+            }
+           
         }
 
         /// <summary>
         /// All animals move randomly within the bounds of Savannah.
         /// This probably should be made into an animal method and be a part of a larger method that calculates all movement.
         /// </summary>
-        private void Movement()
+        private void RandomMovement(Animal animal)
         {
-            // Check if any other animal in vicinity
-
             // Else random movement
-            foreach (var animal in animalList.Animals)
-            {
-                bool isNotInSavannah = false;
 
-                // If any enemy in range, run from or chase enemy.
-                if (animal.CheckRange(animalList))
+            bool isNotInSavannah = false;
+            do
+            {
+                int randomNumberX = random.Next(-1, 2);
+                int randomNumberY = random.Next(-1, 2);
+                int newPositionX = animal.Position[0] + (randomNumberX);
+                int newPositionY = animal.Position[1] + (randomNumberY);
+
+                // Checks for borders.
+                if (newPositionX < 0 || newPositionX > boardsizeX || newPositionY < 4 || newPositionY > boardsizeY)
                 {
-                    animal.Interaction();
+                    isNotInSavannah = true;
                 }
-                // Move randomly.
                 else
                 {
-                    do
-                    {
-                        int randomNumberX = random.Next(-1, 2);
-                        int randomNumberY = random.Next(-1, 2);
-                        int newPositionX = animal.Position[0] + (randomNumberX);
-                        int newPositionY = animal.Position[1] + (randomNumberY);
-
-                        // Checks for borders.
-                        if (newPositionX < 0 || newPositionX > 98 || newPositionY < 4 || newPositionY > 28)
-                        {
-                            isNotInSavannah = true;
-                        }
-                        else
-                        {
-                            animal.RandomMovement(randomNumberX, randomNumberY);
-                            isNotInSavannah = false;
-                        }
-
-                    } while (isNotInSavannah == true);
+                    animal.RandomMovement(randomNumberX, randomNumberY);
+                    isNotInSavannah = false;
                 }
-            }
+
+            } while (isNotInSavannah == true);
 
         }
+
+
 
         /// <summary>
         /// Adds a new animal to list based on user input.
@@ -135,21 +152,17 @@ namespace Savannah
 
             while (animalList.Animals.Count < 121)
             {
-                int xPosition = random.Next(0, 98);
-                int yPosition = random.Next(4, 28);
+                int xPosition = random.Next(0, boardsizeX);
+                int yPosition = random.Next(4, boardsizeY);
                 int[] randomPosition = new int[] { xPosition, yPosition };
                 bool spotIsTaken = false;
 
-                for(int sizeY = -2 ; sizeY < 3; sizeY ++)
+
+                if (animalList.Animals.Where(a => a.Position[0] == xPosition && a.Position[1] == yPosition).Any())
                 {
-                    for (int sizeX = -2; sizeX < 3; sizeX++)
-                    {
-                        if (animalList.Animals.Where(a => a.Position[0] + sizeX == xPosition && a.Position[1] + sizeY == yPosition).Any())
-                        {
-                            spotIsTaken = true;
-                        }
-                    }
+                    spotIsTaken = true;
                 }
+
                 if (!spotIsTaken)
                 {
                     count++;
@@ -158,15 +171,10 @@ namespace Savannah
                     if (input == "l")
                     {
                         lion.Position = new int[2] { xPosition, yPosition };
+                        ID++;
+                        lion.ID = ID;
+                        lion.Health = 40;
 
-                        if (animalList.Animals != null)
-                        {
-                            lion.ID = animalList.Animals.Count + 1;
-                        }
-                        else
-                        {
-                            lion.ID = 1;
-                        }
 
                         animalList.Animals.Add(new Lion()
                         {
@@ -186,15 +194,9 @@ namespace Savannah
                     else
                     {
                         antelope.Position = new int[2] { xPosition, yPosition };
-
-                        if (animalList.Animals != null)
-                        {
-                            antelope.ID = animalList.Animals.Count + 1;
-                        }
-                        else
-                        {
-                            antelope.ID = 1;
-                        }
+                        ID++;
+                        antelope.ID = ID;
+                        antelope.Health = 40;
 
                         animalList.Animals.Add(new Antelope()
                         {
@@ -215,28 +217,5 @@ namespace Savannah
 
             return animal;
         }
-
-        private Array CheckRange()
-        {
-            int[] enemyPosition = new int[2];
-            foreach (var animal in animalList.Animals)
-            {
-                for (int yDimension = -animal.Range; yDimension <= animal.Range+2; yDimension++)
-                {
-                    for (int xDimension = -animal.Range; xDimension <= animal.Range + 2; xDimension++)
-                    {
-                        // Checks if there is any animal of different species in range
-                        if(animalList.Animals.Where(a => a.Position[0] == animal.Position[0] + xDimension && a.Position[1] == animal.Position[0] + yDimension && a.Trigger != animal.Trigger).Any())
-                        {
-                            enemyPosition[0] = animal.Position[0] + xDimension;
-                            enemyPosition[1] = animal.Position[1] + yDimension;
-                        }
-                    }
-                }
-            }
-
-            return enemyPosition;
-        }
-
     }
 }

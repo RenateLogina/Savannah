@@ -18,13 +18,19 @@ namespace Savannah
         public abstract int Range { get; set; }
 
         // Stores current health of animal.
-        public int Health { get; set; }
+        public abstract int Health { get; set; }
 
         // Stores current animal position on board.
         public int[] Position { get; set; }
 
-        // Stores enemyPosition if there is one within range.
-        public int[] EnemyPosition { get; set; }
+        // Stores enemyPosition X if there is one within range.
+        public int EnemyX { get; set; }
+
+        // Stores enemyPosition Y if there is one within range.
+        public int EnemyY { get; set; }
+
+        // stores if enemy has been detected.
+        public bool isEnemyDetected;
 
         // Set true for Lions. Might be the same as AvoidPredator.
         public abstract bool IsPredator { get; set; }
@@ -46,35 +52,8 @@ namespace Savannah
         /// </summary>
         /// <param name="animals"></param>
         /// <returns></returns>
-        public bool CheckRange(AnimalList animals)
-        {
-            bool isEnemyDetected = false;
-            for (int yDimension = -Range; yDimension <= Range + 2; yDimension++)
-            {
-                for (int xDimension = -Range; xDimension <= Range + 2; xDimension++)
-                {
-                    // Checks if there is any animal of different species in range
-                    if (animals.Animals.Where(a => a.Position[0] == Position[0] + xDimension && a.Position[1] == Position[1] + yDimension && a.Trigger != Trigger).Any())
-                    {
-                        if(EnemyPosition == null)
-                        {
-                            int xPosition = Position[0] + xDimension;
-                            int yPosition = Position[1] + yDimension;
-                            EnemyPosition = new int[2] { xPosition, yPosition };
-                            isEnemyDetected = true;
-                        }
-                        else
-                        {
-                            EnemyPosition[0] = Position[0] + xDimension;
-                            EnemyPosition[1] = Position[1] + yDimension;
-                        }
-                        
-                    }
-                }
-            }
-            return isEnemyDetected;
-        }
+        public abstract bool CheckRange(AnimalList animals);
 
-        public abstract void Interaction();
+        public abstract Array Interaction(int enemyX, int enemyY, int boardsizeX, int boardsizeY);
     }
 }

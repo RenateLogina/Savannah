@@ -15,10 +15,10 @@ namespace Savannah
         Antelope antelope = new Antelope();
         Random random = new Random();
         public Timer MyTimer;
-        int count;
         int boardsizeX = 30;
         int boardsizeY = 10;
         int ID;
+        bool IsGameSet = false;
 
         /// <summary>
         /// Starts game by showing welcome message and instructions.
@@ -27,8 +27,8 @@ namespace Savannah
         public void StartGame()
         {
             uI.StartGameMenu();
+            SetAnimals();
             SetGameTimer();
-            Toggler();
         }
 
         /// <summary>
@@ -36,18 +36,20 @@ namespace Savannah
         /// </summary>
         private void SetGameTimer()
         {
-            MyTimer = new System.Timers.Timer(500);
+            MyTimer = new System.Timers.Timer(1000);
             MyTimer.Elapsed += SavannahLoop;
             MyTimer.AutoReset = true;
             MyTimer.Enabled = true;
         }
 
         /// <summary>
-        /// Listens for user input.
+        /// Listens for user input. Sets animals on board and starts the timer.
         /// </summary>
-        private void Toggler()
+        private void SetAnimals()
         {
-            while (MyTimer.Enabled)
+            uI.PrintArray(animalList, boardsizeX, boardsizeY, IsGameSet);
+
+            while (!IsGameSet)
             {
                 var input = uI.ToggleInput().ToString().ToLower();
                 switch (input)
@@ -59,6 +61,12 @@ namespace Savannah
                             CreateAnimal(input);
                         }
 
+                        uI.PrintArray(animalList, boardsizeX, boardsizeY, IsGameSet);
+
+                        break;
+
+                    case "enter":
+                        IsGameSet = true;
                         break;
 
                     case "q":
@@ -75,37 +83,30 @@ namespace Savannah
         /// </summary>
         public void SavannahLoop(Object source, ElapsedEventArgs e)
         {
-            if(animalList.Animals != null)
+            foreach (var animal in animalList.Animals)
             {
-                foreach (var animal in animalList.Animals)
+                animal.CheckRange(animalList);
+                if (animal.Health != 0)
                 {
-                    animal.CheckRange(animalList);
-                    if (animal.Health != 0)
+                    if (animal.isEnemyDetected == true)
                     {
-                        if (animal.isEnemyDetected == true)
-                        {
-                            animal.Interaction(animal.EnemyX, animal.EnemyY, boardsizeX, boardsizeY);
-                        }
-                        else if (animal.isEnemyDetected == false)
-                        {
-                            RandomMovement(animal);
-                        }
+                        animal.EnemyInteraction(animal.EnemyX, animal.EnemyY, boardsizeX, boardsizeY);
+                    }
+                    else if (animal.isEnemyDetected == false)
+                    {
+                        RandomMovement(animal);
+                    }
 
-                        animal.Health--;
-                    }
-                    else
-                    {
-                        animalList.Animals.Remove(animal);
-                    }
+                    animal.Health--;
                 }
+                else
+                {
+                    animalList.Animals.Remove(animal);
+                }
+            }
 
-                uI.PrintArray(animalList, boardsizeX, boardsizeY);
-            }
-            else
-            {
-                uI.PrintMenu();
-            }
-           
+            uI.PrintArray(animalList, boardsizeX, boardsizeY, IsGameSet);
+
         }
 
         /// <summary>
@@ -165,8 +166,6 @@ namespace Savannah
 
                 if (!spotIsTaken)
                 {
-                    count++;
-
                     // Adds a Lion to AnimalList
                     if (input == "l")
                     {
@@ -174,7 +173,6 @@ namespace Savannah
                         ID++;
                         lion.ID = ID;
                         lion.Health = 40;
-
 
                         animalList.Animals.Add(new Lion()
                         {
@@ -185,9 +183,8 @@ namespace Savannah
                             Position = lion.Position,
                             IsPredator = lion.IsPredator,
                             IsMateAvailable = lion.IsMateAvailable,
-
+                            isEnemyDetected = lion.isEnemyDetected,
                         });
-
                     }
 
                     // Adds an Antelope to AnimalList
@@ -196,7 +193,7 @@ namespace Savannah
                         antelope.Position = new int[2] { xPosition, yPosition };
                         ID++;
                         antelope.ID = ID;
-                        antelope.Health = 40;
+                        antelope.Health = 30;
 
                         animalList.Animals.Add(new Antelope()
                         {
@@ -207,7 +204,7 @@ namespace Savannah
                             Position = antelope.Position,
                             IsPredator = antelope.IsPredator,
                             IsMateAvailable = antelope.IsMateAvailable,
-
+                            isEnemyDetected = antelope.isEnemyDetected,
                         });
                     }
 

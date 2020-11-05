@@ -60,7 +60,7 @@ namespace Savannah
         /// <summary>
         /// Runs away from enemy.
         /// </summary>
-        public override Array Interaction(int enemyX, int enemyY, int boardsizeX, int boardsizeY)
+        public override Array EnemyInteraction(int enemyX, int enemyY, int boardsizeX, int boardsizeY)
         {
             Random random = new Random();
             int newPositionX = 0;

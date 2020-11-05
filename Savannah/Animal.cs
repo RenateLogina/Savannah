@@ -38,6 +38,26 @@ namespace Savannah
         // False by default. Sets to true if same species in range for 3 turns. True triggers birth.
         public bool IsMateAvailable { get; set; }
 
+        /// <summary>
+        /// Checks if there are any enemies (animals with different trigger) in range.
+        /// </summary>
+        /// <param name="animals"></param>
+        /// <returns></returns>
+        public abstract bool CheckRange(AnimalList animals);
+
+        /// <summary>
+        /// If animal encounters an enemy, it either pursues or flees.
+        /// </summary>
+        /// <param name="enemyX"> Enemy coordinate col. </param>
+        /// <param name="enemyY"> Enemy coordinate line. </param>
+        /// <returns> new position of the animal. </returns>
+        public abstract Array EnemyInteraction(int enemyX, int enemyY, int boardsizeX, int boardsizeY);
+
+        /// <summary>
+        /// Changes animal position using random numbers generated in Manager.
+        /// </summary>
+        /// <param name="randomX"> Random number for col coordinate </param>
+        /// <param name="randomY"> Random number for line coordinate </param>
         public void RandomMovement(int randomX, int randomY)
         {
             int newPositionX = Position[0] + (randomX);
@@ -46,14 +66,5 @@ namespace Savannah
             Position[0] = newPositionX;
             Position[1] = newPositionY;
         }
-
-        /// <summary>
-        /// Checks if there are any enemies (animals with different trigger) in range.
-        /// </summary>
-        /// <param name="animals"></param>
-        /// <returns></returns>
-        public abstract bool CheckRange(AnimalList animals);
-
-        public abstract Array Interaction(int enemyX, int enemyY, int boardsizeX, int boardsizeY);
     }
 }

@@ -33,7 +33,6 @@ namespace Savannah
         {
             isEnemyDetected = false;
 
-
             for (int line = -Range; line <= Range; line++)
             {
                 for (int col = -Range; col <= Range; col++)
@@ -49,11 +48,13 @@ namespace Savannah
                 }
             }
 
-            // Lion sits on the same spot (executes interaction) for 1 extra turn to eat.
+            // Lion sits on the same spot (executes interaction) for 1 extra turn to eat and regain health.
             if (EnemyX == Position[0] && EnemyY == Position[1])
             {
                 SpecialAction--;
-                if(SpecialAction == 0)
+                Health = 40;
+
+                if (SpecialAction == 0)
                 {
                     isEnemyDetected = false;
                     SpecialAction = 2;
@@ -66,7 +67,7 @@ namespace Savannah
         /// <summary>
         /// Runs after enemy.
         /// </summary>
-        public override Array  Interaction(int enemyX, int enemyY, int boardsizeX, int boardsizeY)
+        public override Array  EnemyInteraction(int enemyX, int enemyY, int boardsizeX, int boardsizeY)
         {
             // Just runs after enemy with no console size constraints.
             int newPositionX = 0;
